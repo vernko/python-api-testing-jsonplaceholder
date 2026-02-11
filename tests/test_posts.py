@@ -2,6 +2,7 @@
 
 from tests.helpers.api_helpers import make_request, validate_status_code
 from tests.helpers.constants import ENDPOINTS
+from tests.helpers.schemas import POST_SCHEMA, validate_schema
 
 def test_get_all_posts():
     """Test GET /posts returns list of posts"""
@@ -18,11 +19,7 @@ def test_get_post_by_id():
     assert response.status_code == 200
 
     post = response.json()
-    assert post["id"] == 1
-    assert "userId" in post
-    assert "id" in post
-    assert "title" in post
-    assert "body" in post
+    validate_schema(post, POST_SCHEMA)
 
 def test_create_a_post():
     """Test create a single post"""
@@ -35,10 +32,7 @@ def test_create_a_post():
     validate_status_code(response, 201)
 
     created_post = response.json()
-
-    assert data["userId"] == created_post["userId"]
-    assert data["title"] == created_post["title"]
-    assert data["body"] == created_post["body"]
+    validate_schema(created_post, POST_SCHEMA)
 
 def test_update_a_post():
     """Test update a single post"""
@@ -51,10 +45,7 @@ def test_update_a_post():
     validate_status_code(response, 200)
 
     updated_post = response.json()
-
-    assert data["userId"] == updated_post["userId"]
-    assert data["title"] == updated_post["title"]
-    assert data["body"] == updated_post["body"]
+    validate_schema(updated_post, POST_SCHEMA)
 
 def test_delete_a_post():
     """Test delete a single post"""
